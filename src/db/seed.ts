@@ -297,7 +297,7 @@ async function seed() {
     },
   ]);
 
-  // T-shirt design options (using new URL)
+  // T-shirt design options (unique images)
   await db.insert(fieldOptions).values([
     {
       id: "opt_tshirt_1",
@@ -312,7 +312,7 @@ async function seed() {
       fieldId: "field_tshirt_graphic",
       label: "Design 2",
       image:
-        "https://ik.imagekit.io/9um5tdigihm/8/storage/personalizedDesign/design/images/24.05.2022/487.ERC2T628cb5f14bb04.preview.png",
+        "https://ik.imagekit.io/9um5tdigihm/8/storage/personalizedDesign/design/images/24.05.2022/487.5PZQ9628cb63d5f182.preview.png",
       position: 1,
     },
     {
@@ -320,7 +320,7 @@ async function seed() {
       fieldId: "field_tshirt_graphic",
       label: "Design 3",
       image:
-        "https://ik.imagekit.io/9um5tdigihm/8/storage/personalizedDesign/design/images/24.05.2022/487.ERC2T628cb5f14bb04.preview.png",
+        "https://ik.imagekit.io/9um5tdigihm/8/storage/personalizedDesign/design/images/24.05.2022/487.88WWZ628cb60f8a1f6.preview.png",
       position: 2,
     },
   ]);

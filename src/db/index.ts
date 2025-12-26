@@ -6,9 +6,9 @@ import * as designs from "./schema/designs";
 
 const connectionString = process.env.DATABASE_URL!;
 
-// SSL required for Supabase connections
+// SSL always required for Supabase
 const client = postgres(connectionString, {
-  ssl: process.env.NODE_ENV === "production" ? "require" : false,
+  ssl: "require",
   prepare: false, // Required for Supabase transaction pooler
 });
 
