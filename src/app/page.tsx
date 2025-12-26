@@ -1,8 +1,11 @@
 import { Header } from "@/components/layout/header";
 import { ProductCard } from "@/components/products/product-card";
 import { db } from "@/db";
-import { products, productVariants } from "@/db/schema/products";
+import { products } from "@/db/schema/products";
 import { eq } from "drizzle-orm";
+
+// Use dynamic rendering to avoid DB connection during build
+export const dynamic = "force-dynamic";
 
 interface ProductListItem {
   id: string;

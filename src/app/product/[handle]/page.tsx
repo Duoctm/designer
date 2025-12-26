@@ -110,11 +110,5 @@ export default async function ProductDetailPage({ params }: PageProps) {
   return <ProductDetailClient product={product as any} />;
 }
 
-export async function generateStaticParams() {
-  const allProducts = await db
-    .select({ handle: products.handle })
-    .from(products)
-    .where(eq(products.status, "active"));
-
-  return allProducts.map((p) => ({ handle: p.handle }));
-}
+// Use dynamic rendering to avoid DB connection during build
+export const dynamic = "force-dynamic";
