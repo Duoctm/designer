@@ -20,6 +20,7 @@ interface ImageSelectFieldProps {
     maxSelect?: number;
   };
   required?: boolean;
+  fieldKey?: string;
 }
 
 export function ImageSelectField({
@@ -30,9 +31,11 @@ export function ImageSelectField({
   options,
   config,
   required,
+  fieldKey,
 }: ImageSelectFieldProps) {
   const { columns = 5, multiple = false, maxSelect = 1 } = config;
   const selectedIds = Array.isArray(value) ? value : value ? [value] : [];
+  const isFlagField = fieldKey === "flag";
 
   const handleSelect = (optionId: string) => {
     if (multiple) {
@@ -47,6 +50,7 @@ export function ImageSelectField({
   };
 
   const isSelected = (optionId: string) => selectedIds.includes(optionId);
+  const isLargeView = options.length <= 2; // Large view for flag selector
 
   return (
     <div className="space-y-3">
@@ -63,17 +67,25 @@ export function ImageSelectField({
       </div>
 
       <div
-        className="grid gap-3"
-        style={{
-          gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
-        }}
+        className={isFlagField ? "flex gap-3" : "grid gap-3"}
+        style={
+          !isFlagField
+            ? {
+                gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
+              }
+            : undefined
+        }
       >
         {options.map((option) => (
           <button
             key={option.id}
             type="button"
             onClick={() => handleSelect(option.id)}
-            className={`relative rounded-xl overflow-hidden border-2 transition-all aspect-square ${
+            className={`relative rounded-xl overflow-hidden border-2 transition-all ${
+              isFlagField ? "w-32 h-20" : "aspect-square"
+            } ${
+              isLargeView && !isFlagField ? "min-h-32" : ""
+            } ${
               isSelected(option.id)
                 ? "border-green-500 ring-2 ring-green-500/20"
                 : "border-gray-100 hover:border-gray-300"

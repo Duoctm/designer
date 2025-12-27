@@ -269,12 +269,12 @@ async function seed() {
   // ========== T-SHIRT PRODUCT ==========
   console.log("Seeding T-shirt product...");
 
-  // Template for T-shirt (flag selection)
+  // Template for T-shirt (reuse animal template for demo)
   await db.insert(templates).values([
     {
-      id: "tpl_tshirt_flag",
-      name: "Flag Collection",
-      description: "Custom flag t-shirt design",
+      id: "tpl_tshirt_graphic",
+      name: "Graphic Tee",
+      description: "Custom graphic t-shirt design",
       category: "tshirt",
       thumbnail:
         "https://cms.gossby.com/resource/template/core/image/catalog/campaign/type/preview/classicTee2/ash/front/background.png",
@@ -282,30 +282,73 @@ async function seed() {
     },
   ]);
 
-  // T-shirt template fields (flag selection)
+  // T-shirt template fields (graphic selection + flag background)
   await db.insert(templateFields).values([
     {
       id: "field_tshirt_flag",
-      templateId: "tpl_tshirt_flag",
+      templateId: "tpl_tshirt_graphic",
       key: "flag",
-      label: "Choose A Flag",
+      label: "Choose A Flag (Background)",
+      description: null,
+      type: "image_select",
+      required: false,
+      config: {
+        columns: 5,
+        multiple: false,
+        minSelect: 0,
+        maxSelect: 1,
+        position: { x: 65, y: 20 },
+        size: { width: 60, height: 40 },
+        absolute: true,
+        zIndex: 10,
+      } as any,
+      position: 0,
+    },
+    {
+      id: "field_tshirt_graphic",
+      templateId: "tpl_tshirt_graphic",
+      key: "graphic",
+      label: "Choose Design (Animal)",
       description: null,
       type: "image_select",
       required: true,
-      config: { columns: 5, multiple: false, minSelect: 1, maxSelect: 1 },
-      position: 0,
+      config: {
+        columns: 5,
+        multiple: false,
+        minSelect: 1,
+        maxSelect: 1,
+        position: { x: 50, y: 35 },
+        zIndex: 2,
+      } as any,
+      position: 1,
     },
   ]);
 
-  // T-shirt flag options
+  // T-shirt design options (unique images)
   await db.insert(fieldOptions).values([
     {
-      id: "opt_tshirt_flag_france",
-      fieldId: "field_tshirt_flag",
-      label: "France",
+      id: "opt_tshirt_1",
+      fieldId: "field_tshirt_graphic",
+      label: "Design 1",
       image:
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Ensign_of_France.svg/250px-Ensign_of_France.svg.png",
+        "https://ik.imagekit.io/9um5tdigihm/8/storage/personalizedDesign/design/images/24.05.2022/487.ERC2T628cb5f14bb04.preview.png",
       position: 0,
+    },
+    {
+      id: "opt_tshirt_2",
+      fieldId: "field_tshirt_graphic",
+      label: "Design 2",
+      image:
+        "https://ik.imagekit.io/9um5tdigihm/8/storage/personalizedDesign/design/images/24.05.2022/487.5PZQ9628cb63d5f182.preview.png",
+      position: 1,
+    },
+    {
+      id: "opt_tshirt_3",
+      fieldId: "field_tshirt_graphic",
+      label: "Design 3",
+      image:
+        "https://ik.imagekit.io/9um5tdigihm/8/storage/personalizedDesign/design/images/24.05.2022/487.88WWZ628cb60f8a1f6.preview.png",
+      position: 2,
     },
     {
       id: "opt_tshirt_flag_usa",
@@ -313,6 +356,14 @@ async function seed() {
       label: "USA",
       image:
         "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Flag_of_the_United_States_%281912-1959%29.svg/1280px-Flag_of_the_United_States_%281912-1959%29.svg.png",
+      position: 0,
+    },
+    {
+      id: "opt_tshirt_flag_france",
+      fieldId: "field_tshirt_flag",
+      label: "France",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Ensign_of_France.svg/250px-Ensign_of_France.svg.png",
       position: 1,
     },
   ]);
@@ -404,7 +455,7 @@ async function seed() {
     {
       id: "pt_graphic_tshirt",
       productId: "prod_graphic_tshirt",
-      templateId: "tpl_tshirt_flag",
+      templateId: "tpl_tshirt_graphic",
       isDefault: true,
       position: 0,
     },

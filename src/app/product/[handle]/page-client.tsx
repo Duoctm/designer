@@ -157,7 +157,36 @@ export default function ProductDetailClient({
                     />
                   )}
 
-                  {/* Design overlay - using designZone from database */}
+                  {/* Flag - absolute positioning with config */}
+                  {sortedFields
+                    .filter((f) => f.key === "flag")
+                    .map((field) => {
+                      const selected = getSelectedOption(field);
+                      if (!selected) return null;
+                      const config = field.config as Record<string, unknown>;
+                      const position = config.position as
+                        | { x: number; y: number }
+                        | undefined;
+                      const size = config.size as
+                        | { width: number; height: number }
+                        | undefined;
+
+                      return (
+                        <img
+                          key={field.id}
+                          src={selected.image}
+                          alt={selected.label ?? "Flag"}
+                          className="absolute pointer-events-none"
+                          style={{
+                            top: `${position?.y ?? 0}%`,
+                            left: `${position?.x ?? 0}%`,
+                            width: `${size?.width ?? 30}px`,
+                            height: `${size?.height ?? 25}px`,
+                            zIndex: (config.zIndex as number) ?? 1,
+                          }}
+                        />
+                      );
+                    })}
                   <div
                     className="absolute flex items-center justify-center pointer-events-none"
                     style={{
@@ -174,12 +203,13 @@ export default function ProductDetailClient({
                     }}
                   >
                     <div className="flex flex-col items-center gap-2">
-                      {/* Selected animal/images */}
+                      {/* Selected animal/images (exclude flag) */}
                       {sortedFields
                         .filter(
                           (f) =>
-                            f.type === "image_select" ||
-                            f.type === "color_select"
+                            (f.type === "image_select" ||
+                              f.type === "color_select") &&
+                            f.key !== "flag"
                         )
                         .map((field) => {
                           const selected = getSelectedOption(field);

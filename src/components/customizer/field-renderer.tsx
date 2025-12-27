@@ -65,6 +65,7 @@ export function FieldRenderer({ field, value, onChange }: FieldRendererProps) {
             }
           }
           required={field.required ?? false}
+          fieldKey={field.key}
         />
       );
 
