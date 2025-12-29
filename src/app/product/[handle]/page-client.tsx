@@ -1,8 +1,25 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { Header } from "@/components/layout/header";
 import { FieldRenderer } from "@/components/customizer/field-renderer";
+
+// Dynamic import for react-konva (SSR not supported)
+const ProductCanvasWrapper = dynamic(
+  () =>
+    import("@/components/customizer/product-canvas").then(
+      (mod) => mod.ProductCanvas
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full flex items-center justify-center">
+        <div className="animate-pulse text-gray-400">Loading canvas...</div>
+      </div>
+    ),
+  }
+);
 
 interface FieldOption {
   id: string;
@@ -62,6 +79,61 @@ interface ProductDetailClientProps {
   product: ProductData;
 }
 
+interface DesignElement {
+  id: string;
+  type: "image" | "text";
+  src?: string;
+  text?: string;
+  alignment?:
+    | "center"
+    | "top-left"
+    | "top-right"
+    | "bottom-left"
+    | "bottom-right";
+}
+
+// Build design elements from fields and selected values
+function buildDesignElements(
+  fields: TemplateField[],
+  values: Record<string, unknown>
+): DesignElement[] {
+  const elements: DesignElement[] = [];
+
+  for (const field of fields) {
+    const value = values[field.key];
+    if (!value) continue;
+
+    if (field.type === "image_select" || field.type === "color_select") {
+      const selectedOption = field.options.find((opt) => opt.id === value);
+      if (selectedOption?.image) {
+        elements.push({
+          id: field.id,
+          type: "image",
+          src: selectedOption.image,
+          alignment:
+            (field.config.alignment as DesignElement["alignment"]) ?? "center",
+        });
+      }
+    }
+
+    if (
+      field.type === "text_input" &&
+      typeof value === "string" &&
+      value.trim()
+    ) {
+      elements.push({
+        id: field.id,
+        type: "text",
+        text: value,
+        alignment:
+          (field.config.alignment as DesignElement["alignment"]) ?? "center",
+      });
+    }
+  }
+
+  return elements;
+}
+
 export default function ProductDetailClient({
   product,
 }: ProductDetailClientProps) {
@@ -92,12 +164,6 @@ export default function ProductDetailClient({
         (a, b) => (a.position ?? 0) - (b.position ?? 0)
       )
     : [];
-
-  const getSelectedOption = (field: TemplateField) => {
-    const selectedValue = values[field.key];
-    if (!selectedValue) return null;
-    return field.options.find((opt) => opt.id === selectedValue);
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -132,95 +198,26 @@ export default function ProductDetailClient({
               {/* Background */}
               <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-50" />
 
-              {/* Product Mockup */}
-              <div className="relative z-10 w-full h-full flex items-center justify-center p-8">
-                {/* Real Mug Image with overlay */}
-                <div className="relative w-full h-full flex items-center justify-center">
-                  {/* Mug mockup from variant */}
-                  {selectedVariant?.image ? (
-                    <img
-                      src={selectedVariant.image}
-                      alt={selectedVariant.title}
-                      className="max-w-full max-h-full object-contain"
-                    />
-                  ) : (
-                    <div
-                      className="w-64 h-64 rounded-2xl shadow-lg"
-                      style={{
-                        backgroundColor:
-                          selectedVariant?.attributes?.color?.toLowerCase() ===
-                          "black"
-                            ? "#1F2937"
-                            : "#FFFFFF",
-                        border: "1px solid #E5E7EB",
-                      }}
-                    />
-                  )}
-
-                  {/* Design overlay - using designZone from database */}
-                  <div
-                    className="absolute flex items-center justify-center pointer-events-none"
-                    style={{
-                      // Position from database: offsetX/Y from center, width/height as percentage
-                      top: `calc(50% + ${
-                        selectedVariant?.designZone?.offsetY ?? 0
-                      }%)`,
-                      left: `calc(50% + ${
-                        selectedVariant?.designZone?.offsetX ?? 0
-                      }%)`,
-                      transform: "translate(-50%, -50%)",
-                      width: `${selectedVariant?.designZone?.width ?? 35}%`,
-                      height: `${selectedVariant?.designZone?.height ?? 50}%`,
-                    }}
-                  >
-                    <div className="flex flex-col items-center gap-2">
-                      {/* Selected animal/images */}
-                      {sortedFields
-                        .filter(
-                          (f) =>
-                            f.type === "image_select" ||
-                            f.type === "color_select"
-                        )
-                        .map((field) => {
-                          const selected = getSelectedOption(field);
-                          if (!selected) return null;
-
-                          return (
-                            <img
-                              key={field.id}
-                              src={selected.image}
-                              alt={selected.label ?? "Selected option"}
-                              className="w-full max-w-[200px] h-auto object-contain drop-shadow-lg"
-                            />
-                          );
-                        })}
-
-                      {/* Text fields */}
-                      {sortedFields
-                        .filter((f) => f.type === "text_input")
-                        .map((field) => {
-                          const text = values[field.key] as string;
-                          if (!text) return null;
-
-                          return (
-                            <div
-                              key={field.id}
-                              className="text-center font-bold text-xl drop-shadow-md"
-                              style={{
-                                color:
-                                  selectedVariant?.attributes?.color?.toLowerCase() ===
-                                  "black"
-                                    ? "#FFFFFF"
-                                    : "#333333",
-                              }}
-                            >
-                              {text}
-                            </div>
-                          );
-                        })}
-                    </div>
-                  </div>
-                </div>
+              {/* Canvas Preview */}
+              <div className="relative z-10 w-full h-full p-4">
+                <ProductCanvasWrapper
+                  productImage={selectedVariant?.image ?? ""}
+                  designZone={
+                    selectedVariant?.designZone ?? {
+                      width: 40,
+                      height: 45,
+                      offsetX: 0,
+                      offsetY: -5,
+                    }
+                  }
+                  designs={buildDesignElements(sortedFields, values)}
+                  textColor={
+                    selectedVariant?.attributes?.color?.toLowerCase() ===
+                    "black"
+                      ? "#FFFFFF"
+                      : "#333333"
+                  }
+                />
               </div>
 
               {/* Variant indicator */}

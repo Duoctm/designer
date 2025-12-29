@@ -282,7 +282,7 @@ async function seed() {
     },
   ]);
 
-  // T-shirt template fields (no text field - only graphic selection)
+  // T-shirt template fields
   await db.insert(templateFields).values([
     {
       id: "field_tshirt_graphic",
@@ -294,6 +294,40 @@ async function seed() {
       required: true,
       config: { columns: 5, multiple: false, minSelect: 1, maxSelect: 1 },
       position: 0,
+    },
+    {
+      id: "field_tshirt_flower",
+      templateId: "tpl_tshirt_graphic",
+      key: "flower",
+      label: "Choose Flower",
+      description: "*Optional decoration*",
+      type: "image_select",
+      required: false,
+      config: {
+        columns: 5,
+        multiple: false,
+        minSelect: 0,
+        maxSelect: 1,
+        alignment: "top-right",
+      },
+      position: 1,
+    },
+    {
+      id: "field_tshirt_flag",
+      templateId: "tpl_tshirt_graphic",
+      key: "flag",
+      label: "Choose Flag",
+      description: "*Optional badge*",
+      type: "image_select",
+      required: false,
+      config: {
+        columns: 5,
+        multiple: false,
+        minSelect: 0,
+        maxSelect: 1,
+        alignment: "top-left",
+      },
+      position: 2,
     },
   ]);
 
@@ -322,6 +356,38 @@ async function seed() {
       image:
         "https://ik.imagekit.io/9um5tdigihm/8/storage/personalizedDesign/design/images/24.05.2022/487.88WWZ628cb60f8a1f6.preview.png",
       position: 2,
+    },
+  ]);
+
+  // Flower options (top-left position)
+  await db.insert(fieldOptions).values([
+    {
+      id: "opt_flower_sakura",
+      fieldId: "field_tshirt_flower",
+      label: "Sakura",
+      image:
+        "https://png.pngtree.com/png-vector/20230120/ourmid/pngtree-sakura-blooming-season-elements-png-image_6567346.png",
+      position: 0,
+    },
+    {
+      id: "opt_flower_lotus",
+      fieldId: "field_tshirt_flower",
+      label: "Lotus",
+      image:
+        "https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/482644ggc/anh-mo-ta.png",
+      position: 1,
+    },
+  ]);
+
+  // Flag options (bottom-right position)
+  await db.insert(fieldOptions).values([
+    {
+      id: "opt_flag_usa",
+      fieldId: "field_tshirt_flag",
+      label: "USA",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Flag_of_the_United_States_%281819%E2%80%931820%29.svg/250px-Flag_of_the_United_States_%281819%E2%80%931820%29.svg.png",
+      position: 0,
     },
   ]);
 
