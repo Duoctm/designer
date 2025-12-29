@@ -389,6 +389,14 @@ async function seed() {
         "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Flag_of_the_United_States_%281819%E2%80%931820%29.svg/250px-Flag_of_the_United_States_%281819%E2%80%931820%29.svg.png",
       position: 0,
     },
+    {
+      id: "opt_flag_france",
+      fieldId: "field_tshirt_flag",
+      label: "France",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Ensign_of_France.svg/250px-Ensign_of_France.svg.png",
+      position: 1,
+    },
   ]);
 
   // T-shirt Product

@@ -50,24 +50,21 @@ export function ImageSelectField({
   };
 
   const isSelected = (optionId: string) => selectedIds.includes(optionId);
-  const isLargeView = options.length <= 2; // Large view for flag selector
 
   return (
     <div className="space-y-3">
-      <div>
+      <div className="flex items-baseline gap-2">
         <span className="text-sm font-semibold text-gray-900">
           {label}
           {required && <span className="text-rose-500 ml-1">*</span>}
         </span>
         {description && (
-          <span className="text-xs text-gray-500 italic ml-2">
-            {description}
-          </span>
+          <span className="text-xs text-gray-400 italic">{description}</span>
         )}
       </div>
 
       <div
-        className={isFlagField ? "flex gap-3" : "grid gap-3"}
+        className={isFlagField ? "flex gap-4" : "grid gap-4"}
         style={
           !isFlagField
             ? {
@@ -81,14 +78,12 @@ export function ImageSelectField({
             key={option.id}
             type="button"
             onClick={() => handleSelect(option.id)}
-            className={`relative rounded-xl overflow-hidden border-2 transition-all ${
-              isFlagField ? "w-32 h-20" : "aspect-square"
-            } ${
-              isLargeView && !isFlagField ? "min-h-32" : ""
+            className={`relative rounded-xl overflow-hidden border-2 transition-all shadow-sm hover:shadow-md ${
+              isFlagField ? "w-24 h-16" : "aspect-square"
             } ${
               isSelected(option.id)
-                ? "border-green-500 ring-2 ring-green-500/20"
-                : "border-gray-100 hover:border-gray-300"
+                ? "border-green-500 ring-2 ring-green-500/20 shadow-green-100"
+                : "border-gray-100 hover:border-gray-300 bg-white"
             }`}
           >
             {/* Checkmark */}

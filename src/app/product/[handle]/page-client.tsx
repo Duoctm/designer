@@ -320,19 +320,28 @@ export default function ProductDetailClient({
 
               {/* Customization Fields */}
               {defaultTemplate && sortedFields.length > 0 && (
-                <div className="border-t border-gray-100 pt-6 space-y-6">
-                  <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+                <div className="border-t border-gray-100 pt-6">
+                  <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
                     Personalized
                   </h2>
 
-                  {sortedFields.map((field) => (
-                    <FieldRenderer
-                      key={field.id}
-                      field={field}
-                      value={values[field.key]}
-                      onChange={(value) => handleValueChange(field.key, value)}
-                    />
-                  ))}
+                  <div className="space-y-8">
+                    {sortedFields.map((field, index) => (
+                      <div key={field.id}>
+                        {/* Divider between fields */}
+                        {index > 0 && (
+                          <div className="border-t border-gray-100 mb-6" />
+                        )}
+                        <FieldRenderer
+                          field={field}
+                          value={values[field.key]}
+                          onChange={(value) =>
+                            handleValueChange(field.key, value)
+                          }
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
