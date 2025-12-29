@@ -282,14 +282,25 @@ async function seed() {
     },
   ]);
 
-  // T-shirt template fields (graphic selection + flag background)
+  // T-shirt template fields
   await db.insert(templateFields).values([
     {
-      id: "field_tshirt_flag",
+      id: "field_tshirt_graphic",
       templateId: "tpl_tshirt_graphic",
-      key: "flag",
-      label: "Choose A Flag (Background)",
+      key: "graphic",
+      label: "Choose Design",
       description: null,
+      type: "image_select",
+      required: true,
+      config: { columns: 5, multiple: false, minSelect: 1, maxSelect: 1 },
+      position: 0,
+    },
+    {
+      id: "field_tshirt_flower",
+      templateId: "tpl_tshirt_graphic",
+      key: "flower",
+      label: "Choose Flower",
+      description: "*Optional decoration*",
       type: "image_select",
       required: false,
       config: {
@@ -297,30 +308,26 @@ async function seed() {
         multiple: false,
         minSelect: 0,
         maxSelect: 1,
-        position: { x: 65, y: 20 },
-        size: { width: 60, height: 40 },
-        absolute: true,
-        zIndex: 10,
-      } as any,
-      position: 0,
+        alignment: "top-right",
+      },
+      position: 1,
     },
     {
-      id: "field_tshirt_graphic",
+      id: "field_tshirt_flag",
       templateId: "tpl_tshirt_graphic",
-      key: "graphic",
-      label: "Choose Design (Animal)",
-      description: null,
+      key: "flag",
+      label: "Choose Flag",
+      description: "*Optional badge*",
       type: "image_select",
-      required: true,
+      required: false,
       config: {
         columns: 5,
         multiple: false,
-        minSelect: 1,
+        minSelect: 0,
         maxSelect: 1,
-        position: { x: 50, y: 35 },
-        zIndex: 2,
-      } as any,
-      position: 1,
+        alignment: "top-left",
+      },
+      position: 2,
     },
   ]);
 
@@ -350,21 +357,37 @@ async function seed() {
         "https://ik.imagekit.io/9um5tdigihm/8/storage/personalizedDesign/design/images/24.05.2022/487.88WWZ628cb60f8a1f6.preview.png",
       position: 2,
     },
+  ]);
+
+  // Flower options (top-left position)
+  await db.insert(fieldOptions).values([
     {
-      id: "opt_tshirt_flag_usa",
-      fieldId: "field_tshirt_flag",
-      label: "USA",
+      id: "opt_flower_sakura",
+      fieldId: "field_tshirt_flower",
+      label: "Sakura",
       image:
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Flag_of_the_United_States_%281912-1959%29.svg/1280px-Flag_of_the_United_States_%281912-1959%29.svg.png",
+        "https://png.pngtree.com/png-vector/20230120/ourmid/pngtree-sakura-blooming-season-elements-png-image_6567346.png",
       position: 0,
     },
     {
-      id: "opt_tshirt_flag_france",
-      fieldId: "field_tshirt_flag",
-      label: "France",
+      id: "opt_flower_lotus",
+      fieldId: "field_tshirt_flower",
+      label: "Lotus",
       image:
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Ensign_of_France.svg/250px-Ensign_of_France.svg.png",
+        "https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/482644ggc/anh-mo-ta.png",
       position: 1,
+    },
+  ]);
+
+  // Flag options (bottom-right position)
+  await db.insert(fieldOptions).values([
+    {
+      id: "opt_flag_usa",
+      fieldId: "field_tshirt_flag",
+      label: "USA",
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Flag_of_the_United_States_%281819%E2%80%931820%29.svg/250px-Flag_of_the_United_States_%281819%E2%80%931820%29.svg.png",
+      position: 0,
     },
   ]);
 

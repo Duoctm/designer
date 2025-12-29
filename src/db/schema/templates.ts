@@ -64,6 +64,12 @@ export const templateFields = pgTable("template_fields", {
         multiple?: boolean;
         minSelect?: number;
         maxSelect?: number;
+        alignment?:
+          | "center"
+          | "top-left"
+          | "top-right"
+          | "bottom-left"
+          | "bottom-right";
       }
     | {
         // number_input
@@ -76,6 +82,12 @@ export const templateFields = pgTable("template_fields", {
         // color_select (still image-based, but specifically for colors)
         columns?: number;
         showLabel?: boolean;
+        alignment?:
+          | "center"
+          | "top-left"
+          | "top-right"
+          | "bottom-left"
+          | "bottom-right";
       }
   >(),
 
